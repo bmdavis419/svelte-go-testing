@@ -19,25 +19,10 @@
   <h1 class="text-3xl font-bold font-sans">Basic Todo App Example</h1>
   <h4 class="font-light text-lg italic">by Ben Davis</h4>
 
-  <button
-    on:click={() => {
-      data.todos = [
-        ...data.todos,
-        {
-          id: Math.random(),
-          title: "New Todo",
-          completed: false,
-          description: "This is a new todo",
-          color: "blue",
-        },
-      ];
-    }}>Add Todo</button
-  >
-
   {#each data.todos as todo (todo.id)}
     <div
       class="flex mt-4 bg-white rounded-lg w-[500px] p-4 shadow-lg flex-col"
-      in:fly={{ x: 50, duration: 1000 }}
+      in:fly={{ x: 50, duration: 5000 }}
       out:fly={{ x: 50, duration: 1000 }}
     >
       <h3
@@ -45,7 +30,9 @@
           'line-through'}"
       >
         <span
-          class="w-[12px] h-[12px] rounded-full bg-green-600 inline-block"
+          class="w-[12px] h-[12px] rounded-full inline-block {todo.color ===
+            'blue' && 'bg-blue-600'} {todo.color === 'red' &&
+            'bg-red-600'} {todo.color === 'green' && 'bg-green-600'}"
         />
         <span class="font-bold text-lg">{todo.title}</span>
       </h3>
