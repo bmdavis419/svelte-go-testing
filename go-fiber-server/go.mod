@@ -2,8 +2,6 @@ module github.com/bmdavis419/svelte-go-testing/go-fiber-server
 
 go 1.20
 
-require github.com/jmoiron/sqlx v1.3.5
-
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/google/uuid v1.3.0 // indirect
@@ -35,7 +33,6 @@ require (
 require (
 	github.com/gofiber/fiber/v2 v2.45.0
 	github.com/jackc/pgx/v5 v5.3.1
-	github.com/lib/pq v1.10.9 // indirect
-	github.com/mattn/go-sqlite3 v1.14.10 // indirect
+	github.com/lib/pq v1.10.9
 	go.uber.org/fx v1.19.3
 )
