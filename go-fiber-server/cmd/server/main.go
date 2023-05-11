@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/private/auth"
 	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/private/db"
 	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/private/handlers"
 	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/private/storage"
@@ -21,6 +22,10 @@ func newFiberServer(lc fx.Lifecycle, userHandlers *handlers.UserHandler) *fiber.
 	// attach the user handlers
 	userGroup := app.Group("/users")
 	userGroup.Post("/generate", userHandlers.GenerateNewUser)
+	userGroup.Post(("/sign-up"), userHandlers.SignUpUser)
+	userGroup.Post("/sign-in", userHandlers.SignInUser)
+	userGroup.Get("/me", userHandlers.GetUserInfo)
+	userGroup.Post("/sign-out", userHandlers.SignOutUser)
 
 	lc.Append(fx.Hook{
 		OnStart: func(context.Context) error {
@@ -39,7 +44,7 @@ func newFiberServer(lc fx.Lifecycle, userHandlers *handlers.UserHandler) *fiber.
 
 func main() {
 	fx.New(
-		fx.Provide(db.CreatePostgresConnection, storage.NewUserStorage, handlers.NewUserHandler),
+		fx.Provide(db.CreatePostgresConnection, storage.NewUserStorage, handlers.NewUserHandler, db.CreateRedisConnection, auth.NewSessionManager),
 		fx.Invoke(newFiberServer),
 	).Run()
 }

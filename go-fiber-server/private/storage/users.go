@@ -22,3 +22,19 @@ func (s *UserStorage) GenerateNewUser() (int, error) {
 	}
 	return id, nil
 }
+
+type NewUser struct {
+	FirstName string
+	LastName  string
+	Email     string
+	Password  string
+}
+
+func (s *UserStorage) CreateNewUser(data NewUser) (int, error) {
+	var id int
+	err := s.Conn.QueryRow(context.Background(), "insert into users (first_name, last_name, email, password) values ($1, $2, $3, $4) returning id", data.FirstName, data.LastName, data.Email, data.Password).Scan(&id)
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
+}
