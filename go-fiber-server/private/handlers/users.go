@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"fmt"
+
 	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/private/auth"
 	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/private/storage"
 	"github.com/go-playground/validator/v10"
@@ -18,11 +20,16 @@ func NewUserHandler(storage *storage.UserStorage, sessionManager *auth.SessionMa
 }
 
 func (u *UserHandler) SignOutUser(c *fiber.Ctx) error {
-	// get the user id from the session
-	sessionId := c.Cookies("session_id")
-	if sessionId == "" {
-		return c.JSON(fiber.Map{"error": "no session id found"})
+	// get the session from the authorization header
+	sessionHeader := c.Get("Authorization")
+
+	// ensure the session header is not empty and in the correct format
+	if sessionHeader == "" || len(sessionHeader) < 8 || sessionHeader[:7] != "Bearer " {
+		return c.JSON(fiber.Map{"error": "invalid session header"})
 	}
+
+	// get the session id
+	sessionId := sessionHeader[7:]
 
 	// delete the session
 	err := u.SessionManager.SignOut(sessionId)
@@ -30,21 +37,20 @@ func (u *UserHandler) SignOutUser(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"error": err.Error()})
 	}
 
-	// delete the cookie
-	c.Cookie(&fiber.Cookie{
-		Name:   "session_id",
-		MaxAge: -1,
-	})
-
 	return c.JSON(fiber.Map{"success": true})
 }
 
 func (u *UserHandler) GetUserInfo(c *fiber.Ctx) error {
-	// get the user id from the session
-	sessionId := c.Cookies("session_id")
-	if sessionId == "" {
-		return c.JSON(fiber.Map{"error": "no session id found"})
+	// get the session from the authorization header
+	sessionHeader := c.Get("Authorization")
+
+	// ensure the session header is not empty and in the correct format
+	if sessionHeader == "" || len(sessionHeader) < 8 || sessionHeader[:7] != "Bearer " {
+		return c.JSON(fiber.Map{"error": "invalid session header"})
 	}
+
+	// get the session id
+	sessionId := sessionHeader[7:]
 
 	// get the user data from the session
 	user, err := u.SessionManager.GetSession(sessionId)
@@ -68,6 +74,8 @@ func (u *UserHandler) SignInUser(c *fiber.Ctx) error {
 		return err
 	}
 
+	fmt.Println(user)
+
 	// validate the user struct
 	validate := validator.New()
 	err = validate.Struct(user)
@@ -81,13 +89,8 @@ func (u *UserHandler) SignInUser(c *fiber.Ctx) error {
 		return err
 	}
 
-	// return the session id
-	c.Cookie(&fiber.Cookie{
-		Name:  "session_id",
-		Value: sessionId,
-		// HTTPOnly: true,
-		// Secure:   true,
-	})
+	// set the session id as a header
+	c.Response().Header.Set("Authorization", fmt.Sprintf("Bearer %s", sessionId))
 
 	return c.JSON(fiber.Map{"success": true})
 }
@@ -144,13 +147,8 @@ func (u *UserHandler) SignUpUser(c *fiber.Ctx) error {
 		return err
 	}
 
-	// return the session id
-	c.Cookie(&fiber.Cookie{
-		Name:  "session_id",
-		Value: sessionId,
-		// HTTPOnly: true,
-		// Secure:   true,
-	})
+	// set the session id as a header
+	c.Response().Header.Set("Authorization", fmt.Sprintf("Bearer %s", sessionId))
 
 	return c.JSON(fiber.Map{"id": id})
 }
