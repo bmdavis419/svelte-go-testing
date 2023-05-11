@@ -2,7 +2,16 @@
 
 version: "3"
 
+env:
+  POSTGRESQL_URL: postgres://localhost:5432/go_svelte_todos?sslmode=disable
+
 tasks:
   default:
     cmds:
       - go run ./cmd/server
+  migrateUp:
+    cmds:
+      - migrate -database $POSTGRESQL_URL -path db/migrations up
+  migrateDown:
+    cmds:
+      - migrate -database $POSTGRESQL_URL -path db/migrations down
