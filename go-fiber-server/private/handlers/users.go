@@ -17,15 +17,6 @@ func NewUserHandler(storage *storage.UserStorage, sessionManager *auth.SessionMa
 	return &UserHandler{Storage: storage, SessionManager: sessionManager}
 }
 
-func (u *UserHandler) GenerateNewUser(c *fiber.Ctx) error {
-	id, err := u.Storage.GenerateNewUser()
-	if err != nil {
-		c.Status(500)
-		return c.JSON(fiber.Map{"error": err.Error()})
-	}
-	return c.JSON(fiber.Map{"id": id})
-}
-
 func (u *UserHandler) SignOutUser(c *fiber.Ctx) error {
 	// get the user id from the session
 	sessionId := c.Cookies("session_id")

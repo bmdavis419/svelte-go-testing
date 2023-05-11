@@ -21,7 +21,6 @@ func newFiberServer(lc fx.Lifecycle, userHandlers *handlers.UserHandler) *fiber.
 
 	// attach the user handlers
 	userGroup := app.Group("/users")
-	userGroup.Post("/generate", userHandlers.GenerateNewUser)
 	userGroup.Post(("/sign-up"), userHandlers.SignUpUser)
 	userGroup.Post("/sign-in", userHandlers.SignInUser)
 	userGroup.Get("/me", userHandlers.GetUserInfo)
@@ -44,7 +43,17 @@ func newFiberServer(lc fx.Lifecycle, userHandlers *handlers.UserHandler) *fiber.
 
 func main() {
 	fx.New(
-		fx.Provide(db.CreatePostgresConnection, storage.NewUserStorage, handlers.NewUserHandler, db.CreateRedisConnection, auth.NewSessionManager),
+		fx.Provide(
+			// creates: *pgxpool.Pool
+			db.CreatePostgresConnection,
+			// creates: *storage.UserStorage
+			storage.NewUserStorage,
+			// creates: *handlers.UserHandler
+			handlers.NewUserHandler,
+			// creates: *redis.Client
+			db.CreateRedisConnection,
+			// creates: *auth.SessionManager
+			auth.NewSessionManager),
 		fx.Invoke(newFiberServer),
 	).Run()
 }
