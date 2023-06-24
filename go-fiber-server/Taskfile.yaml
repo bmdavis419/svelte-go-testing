@@ -3,15 +3,18 @@
 version: "3"
 
 env:
-  POSTGRESQL_URL: postgres://localhost:5432/go_svelte_todos?sslmode=disable
+  DSN: root:password@tcp(127.0.0.1:3309)/go_svelte_todos?parseTime=true
 
 tasks:
   default:
     cmds:
       - go run .
+  migrateStatus:
+    cmds:
+      - goose -dir migrations mysql $DSN status
   migrateUp:
     cmds:
-      - migrate -database $POSTGRESQL_URL -path db/migrations up
+      - goose -dir migrations mysql $DSN up
   migrateDown:
     cmds:
-      - migrate -database $POSTGRESQL_URL -path db/migrations down
+      - goose -dir migrations mysql $DSN down

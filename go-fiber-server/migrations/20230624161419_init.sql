@@ -1,3 +1,5 @@
+-- +goose Up
+-- +goose StatementBegin
 CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(255) NOT NULL,
@@ -6,6 +8,8 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL
 );
 
+-- +goose StatementEnd
+-- +goose StatementBegin
 CREATE TABLE todos (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
@@ -14,3 +18,14 @@ CREATE TABLE todos (
     user_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+-- +goose StatementEnd
+-- +goose Down
+-- +goose StatementBegin
+DROP TABLE todos;
+
+-- +goose StatementEnd
+-- +goose StatementBegin
+DROP TABLE users;
+
+-- +goose StatementEnd
