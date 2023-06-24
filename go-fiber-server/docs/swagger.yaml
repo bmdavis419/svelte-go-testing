@@ -1,0 +1,139 @@
+basePath: /
+definitions:
+  auth.UserSession:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: integer
+      lastName:
+        type: string
+    type: object
+  handlers.SuccessResponse:
+    properties:
+      success:
+        type: boolean
+    type: object
+  handlers.signInRequestBody:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  handlers.signUpSuccessResponse:
+    properties:
+      id:
+        type: integer
+    type: object
+  handlers.userRequestBody:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - email
+    - first_name
+    - last_name
+    - password
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a basic example API.
+  title: Go Svelte Todos API
+  version: "1.0"
+paths:
+  /users/me:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.UserSession'
+      security:
+      - ApiKeyAuth Authorization "session id": []
+      summary: Get the user's info
+      tags:
+      - users
+  /users/sign-in:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: The user's email and password
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.signInRequestBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Authorization:
+              description: contains the session id in bearer format
+              type: string
+          schema:
+            $ref: '#/definitions/handlers.SuccessResponse'
+      summary: Sign in a user
+      tags:
+      - users
+  /users/sign-out:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.SuccessResponse'
+      summary: Sign out a user
+      tags:
+      - users
+  /users/sign-up:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: The user's first name, last name, email, and password
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.userRequestBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Authorization:
+              description: contains the session id in bearer format
+              type: string
+          schema:
+            $ref: '#/definitions/handlers.signUpSuccessResponse'
+      summary: Sign up a user
+      tags:
+      - users
+swagger: "2.0"

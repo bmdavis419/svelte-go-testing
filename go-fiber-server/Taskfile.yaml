@@ -8,7 +8,7 @@ env:
 tasks:
   default:
     cmds:
-      - go run ./cmd/server
+      - go run .
   migrateUp:
     cmds:
       - migrate -database $POSTGRESQL_URL -path db/migrations up

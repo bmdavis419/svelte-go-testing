@@ -4,16 +4,25 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/private/auth"
-	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/private/db"
-	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/private/handlers"
-	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/private/storage"
+	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/auth"
+	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/db"
+	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/handlers"
+	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/storage"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/swagger"
 	"go.uber.org/fx"
+
+	_ "github.com/bmdavis419/svelte-go-testing/go-fiber-server/docs"
 )
 
+//	@title			Go Svelte Todos API
+//	@version		1.0
+//	@description	This is a basic example API.
+
+//	@host		localhost:8080
+//	@BasePath	/
 func newFiberServer(lc fx.Lifecycle, userHandlers *handlers.UserHandler) *fiber.App {
 	app := fiber.New()
 
@@ -23,6 +32,9 @@ func newFiberServer(lc fx.Lifecycle, userHandlers *handlers.UserHandler) *fiber.
 	app.Get("/health", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"status": "ok"})
 	})
+
+	// docs
+	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	// attach the user handlers
 	userGroup := app.Group("/users")

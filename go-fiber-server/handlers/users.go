@@ -3,8 +3,8 @@ package handlers
 import (
 	"fmt"
 
-	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/private/auth"
-	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/private/storage"
+	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/auth"
+	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/storage"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
@@ -19,6 +19,18 @@ func NewUserHandler(storage *storage.UserStorage, sessionManager *auth.SessionMa
 	return &UserHandler{Storage: storage, SessionManager: sessionManager}
 }
 
+type SuccessResponse struct {
+	Success bool `json:"success"`
+}
+
+// SignOutUser godoc
+//
+//	@Summary	Sign out a user
+//	@Tags		users
+//	@Accept		json
+//	@Produce	json
+//	@Success	200	{object}	SuccessResponse
+//	@Router		/users/sign-out [post]
 func (u *UserHandler) SignOutUser(c *fiber.Ctx) error {
 	// get the session from the authorization header
 	sessionHeader := c.Get("Authorization")
@@ -40,6 +52,14 @@ func (u *UserHandler) SignOutUser(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"success": true})
 }
 
+// GetUserInfo godoc
+// @Summary Get the user's info
+// @Tags users
+// @Accept json
+// @Produce json
+// @Success 200 {object} auth.UserSession
+// @Security ApiKeyAuth Authorization "session id"
+// @Router /users/me [get]
 func (u *UserHandler) GetUserInfo(c *fiber.Ctx) error {
 	// get the session from the authorization header
 	sessionHeader := c.Get("Authorization")
@@ -66,6 +86,15 @@ type signInRequestBody struct {
 	Password string `json:"password" validate:"required,min=6"`
 }
 
+// SignInUser godoc
+// @Summary Sign in a user
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param user body signInRequestBody true "The user's email and password"
+// @Success 200 {object} SuccessResponse
+// @Header 200 {string} Authorization "contains the session id in bearer format"
+// @Router /users/sign-in [post]
 func (u *UserHandler) SignInUser(c *fiber.Ctx) error {
 	var user signInRequestBody
 
@@ -102,6 +131,19 @@ type userRequestBody struct {
 	Password  string `json:"password" validate:"required,min=6"`
 }
 
+type signUpSuccessResponse struct {
+	Id int `json:"id"`
+}
+
+// SignUpUser godoc
+// @Summary Sign up a user
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param user body userRequestBody true "The user's first name, last name, email, and password"
+// @Success 200 {object} signUpSuccessResponse
+// @Header 200 {string} Authorization "contains the session id in bearer format"
+// @Router /users/sign-up [post]
 func (u *UserHandler) SignUpUser(c *fiber.Ctx) error {
 	// get the info from the request body
 	var user userRequestBody
