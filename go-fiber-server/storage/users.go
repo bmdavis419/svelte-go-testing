@@ -1,16 +1,14 @@
 package storage
 
 import (
-	"context"
-
-	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jmoiron/sqlx"
 )
 
 type UserStorage struct {
-	Conn *pgxpool.Pool
+	Conn *sqlx.DB
 }
 
-func NewUserStorage(conn *pgxpool.Pool) *UserStorage {
+func NewUserStorage(conn *sqlx.DB) *UserStorage {
 	return &UserStorage{Conn: conn}
 }
 
@@ -22,8 +20,12 @@ type NewUser struct {
 }
 
 func (s *UserStorage) CreateNewUser(data NewUser) (int, error) {
+	_, err := s.Conn.Exec("insert into users (first_name, last_name, email, password) values (?, ?, ?, ?)", data.FirstName, data.LastName, data.Email, data.Password)
+	if err != nil {
+		return 0, err
+	}
 	var id int
-	err := s.Conn.QueryRow(context.Background(), "insert into users (first_name, last_name, email, password) values ($1, $2, $3, $4) returning id", data.FirstName, data.LastName, data.Email, data.Password).Scan(&id)
+	err = s.Conn.QueryRow("SELECT LAST_INSERT_ID()").Scan(&id)
 	if err != nil {
 		return 0, err
 	}

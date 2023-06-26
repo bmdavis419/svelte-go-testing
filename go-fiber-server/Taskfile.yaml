@@ -18,3 +18,6 @@ tasks:
   migrateDown:
     cmds:
       - goose -dir migrations mysql $DSN down
+  docs:
+    cmds:
+      - swag init --dir ./,./handlers

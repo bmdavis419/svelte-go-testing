@@ -6,17 +6,17 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jmoiron/sqlx"
 	"github.com/redis/go-redis/v9"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type SessionManager struct {
 	Rdb  *redis.Client
-	Conn *pgxpool.Pool
+	Conn *sqlx.DB
 }
 
-func NewSessionManager(rdb *redis.Client, conn *pgxpool.Pool) *SessionManager {
+func NewSessionManager(rdb *redis.Client, conn *sqlx.DB) *SessionManager {
 	return &SessionManager{Rdb: rdb, Conn: conn}
 }
 
@@ -48,7 +48,7 @@ func (s *SessionManager) GenerateSession(data UserSession) (string, error) {
 func (s *SessionManager) SignIn(email, password string) (string, error) {
 	// check if the user exists
 	var user User
-	err := s.Conn.QueryRow(context.Background(), "select id, first_name, last_name, email, password from users where email = $1", email).Scan(&user.Id, &user.FirstName, &user.LastName, &user.Email, &user.Password)
+	err := s.Conn.QueryRow("select id, first_name, last_name, email, password from users where email = ?", email).Scan(&user.Id, &user.FirstName, &user.LastName, &user.Email, &user.Password)
 	if err != nil {
 		return "", err
 	}

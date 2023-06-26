@@ -62,8 +62,8 @@ func newFiberServer(lc fx.Lifecycle, userHandlers *handlers.UserHandler) *fiber.
 func main() {
 	fx.New(
 		fx.Provide(
-			// creates: *pgxpool.Pool
-			db.CreatePostgresConnection,
+			// creates: *sqlx.DB
+			db.CreateMySqlConnection,
 			// creates: *storage.UserStorage
 			storage.NewUserStorage,
 			// creates: *handlers.UserHandler
