@@ -20,7 +20,7 @@ import (
 
 //		@title			Go Svelte Todos API
 //		@version		1.0
-//		@description	This is a basic example API.
+//		@description	This is a basic CRUD api with authentication, written by @bmdavis419.
 //		@securityDefinitions.apikey	ApiKeyAuth
 //		@in							header
 //		@name						Authorization
@@ -90,20 +90,3 @@ func main() {
 		fx.Invoke(newFiberServer),
 	).Run()
 }
-
-// WAS TESTING OUT MYSQL
-// func dbDemo(db *sqlx.DB) {
-// 	mostRecentForm := make([]struct {
-// 		Acc_num          string
-// 		Period_of_report string
-// 		Issuer_cik       string
-// 	}, 0)
-// 	err := db.Select(&mostRecentForm, "SELECT acc_num, period_of_report, issuer_cik FROM form ORDER BY period_of_report DESC LIMIT 10")
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	for _, row := range mostRecentForm {
-// 		fmt.Printf("Form: %s, on %s by %s\n", row.Acc_num, row.Period_of_report, row.Issuer_cik)
-// 	}
-// }
