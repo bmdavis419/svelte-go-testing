@@ -18,13 +18,16 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-//	@title			Go Svelte Todos API
-//	@version		1.0
-//	@description	This is a basic example API.
-
-// @host		localhost:8080
-// @BasePath	/
-func newFiberServer(lc fx.Lifecycle, userHandlers *handlers.UserHandler) *fiber.App {
+//		@title			Go Svelte Todos API
+//		@version		1.0
+//		@description	This is a basic example API.
+//		@securityDefinitions.apikey	ApiKeyAuth
+//		@in							header
+//		@name						Authorization
+//		@description				Token in Bearer format to authenticate the user
+//		@host		localhost:8080
+//	 @BasePath	/
+func newFiberServer(lc fx.Lifecycle, userHandlers *handlers.UserHandler, todoHandlers *handlers.TodoHandler) *fiber.App {
 	app := fiber.New()
 
 	app.Use(cors.New())
@@ -44,6 +47,10 @@ func newFiberServer(lc fx.Lifecycle, userHandlers *handlers.UserHandler) *fiber.
 	userGroup.Get("/me", userHandlers.GetUserInfo)
 	userGroup.Post("/sign-out", userHandlers.SignOutUser)
 
+	// attach the todo handlers
+	todoGroup := app.Group("/todos")
+	todoGroup.Post("/", todoHandlers.CreateTodo)
+
 	lc.Append(fx.Hook{
 		OnStart: func(context.Context) error {
 			// TODO: switch the port to an env variable
@@ -62,6 +69,10 @@ func newFiberServer(lc fx.Lifecycle, userHandlers *handlers.UserHandler) *fiber.
 func main() {
 	fx.New(
 		fx.Provide(
+			// creates: *storage.TodoStorage
+			storage.NewTodoStorage,
+			// creates: *handlers.TodoHandler
+			handlers.NewTodoHandler,
 			// creates: *sqlx.DB
 			db.CreateMySqlConnection,
 			// creates: *storage.UserStorage

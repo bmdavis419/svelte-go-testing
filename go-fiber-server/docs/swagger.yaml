@@ -1,4 +1,3 @@
-basePath: /
 definitions:
   auth.UserSession:
     properties:
@@ -15,6 +14,18 @@ definitions:
     properties:
       success:
         type: boolean
+    type: object
+  handlers.createTodoRequest:
+    properties:
+      description:
+        type: string
+      title:
+        type: string
+    type: object
+  handlers.createTodoResponse:
+    properties:
+      id:
+        type: integer
     type: object
   handlers.signInRequestBody:
     properties:
@@ -49,13 +60,35 @@ definitions:
     - last_name
     - password
     type: object
-host: localhost:8080
 info:
   contact: {}
   description: This is a basic example API.
   title: Go Svelte Todos API
   version: "1.0"
 paths:
+  /todos:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: The todo's info
+        in: body
+        name: todo
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.createTodoRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.createTodoResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new Todo
+      tags:
+      - todos
   /users/me:
     get:
       consumes:
@@ -68,7 +101,7 @@ paths:
           schema:
             $ref: '#/definitions/auth.UserSession'
       security:
-      - ApiKeyAuth Authorization "session id": []
+      - ApiKeyAuth: []
       summary: Get the user's info
       tags:
       - users
@@ -136,4 +169,10 @@ paths:
       summary: Sign up a user
       tags:
       - users
+securityDefinitions:
+  ApiKeyAuth:
+    description: Token in Bearer format to authenticate the user
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

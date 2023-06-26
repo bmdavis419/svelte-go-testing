@@ -57,8 +57,8 @@ func (u *UserHandler) SignOutUser(c *fiber.Ctx) error {
 // @Tags users
 // @Accept json
 // @Produce json
+// @Security ApiKeyAuth
 // @Success 200 {object} auth.UserSession
-// @Security ApiKeyAuth Authorization "session id"
 // @Router /users/me [get]
 func (u *UserHandler) GetUserInfo(c *fiber.Ctx) error {
 	// get the session from the authorization header
@@ -192,5 +192,8 @@ func (u *UserHandler) SignUpUser(c *fiber.Ctx) error {
 	// set the session id as a header
 	c.Response().Header.Set("Authorization", fmt.Sprintf("Bearer %s", sessionId))
 
-	return c.JSON(fiber.Map{"id": id})
+	resp := signUpSuccessResponse{
+		Id: id,
+	}
+	return c.JSON(resp)
 }
