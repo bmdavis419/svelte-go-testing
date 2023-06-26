@@ -20,14 +20,14 @@ type NewUser struct {
 }
 
 func (s *UserStorage) CreateNewUser(data NewUser) (int, error) {
-	_, err := s.Conn.Exec("insert into users (first_name, last_name, email, password) values (?, ?, ?, ?)", data.FirstName, data.LastName, data.Email, data.Password)
+	res, err := s.Conn.Exec("insert into users (first_name, last_name, email, password) values (?, ?, ?, ?)", data.FirstName, data.LastName, data.Email, data.Password)
 	if err != nil {
 		return 0, err
 	}
-	var id int
-	err = s.Conn.QueryRow("SELECT LAST_INSERT_ID()").Scan(&id)
+	id, err := res.LastInsertId()
 	if err != nil {
 		return 0, err
 	}
-	return id, nil
+
+	return int(id), nil
 }

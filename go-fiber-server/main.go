@@ -50,6 +50,10 @@ func newFiberServer(lc fx.Lifecycle, userHandlers *handlers.UserHandler, todoHan
 	// attach the todo handlers
 	todoGroup := app.Group("/todos")
 	todoGroup.Post("/", todoHandlers.CreateTodo)
+	todoGroup.Get("/", todoHandlers.FetchTodos)
+	todoGroup.Get("/:id", todoHandlers.FetchTodo)
+	todoGroup.Put("/:id/complete", todoHandlers.CompleteTodo)
+	todoGroup.Delete("/:id", todoHandlers.DeleteTodo)
 
 	lc.Append(fx.Hook{
 		OnStart: func(context.Context) error {
