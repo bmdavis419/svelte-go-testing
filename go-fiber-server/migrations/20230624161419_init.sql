@@ -16,7 +16,7 @@ CREATE TABLE todos (
     description TEXT,
     completed BOOLEAN NOT NULL DEFAULT FALSE,
     user_id INT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    KEY user_id_idx (user_id)
 );
 
 -- +goose StatementEnd

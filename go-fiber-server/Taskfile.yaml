@@ -3,7 +3,7 @@
 version: "3"
 
 env:
-  DSN: root:password@tcp(127.0.0.1:3309)/go_svelte_todos?parseTime=true
+  DSN_LOCAL: root:password@tcp(127.0.0.1:3309)/go_svelte_todos?parseTime=true
 
 tasks:
   default:

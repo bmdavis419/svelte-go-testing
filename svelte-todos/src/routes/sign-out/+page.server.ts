@@ -1,10 +1,11 @@
+import { API_URL } from "$env/static/private";
 import { redirect } from "@sveltejs/kit";
 
 export const load = async (event) => {
   const sessionId = event.cookies.get("sessionId");
 
   // sign out on the server
-  const res = await fetch("http://127.0.0.1:8080/users/sign-out", {
+  const res = await fetch(`${API_URL}/users/sign-out`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${sessionId}`,

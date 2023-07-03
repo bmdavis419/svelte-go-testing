@@ -1,13 +1,8 @@
 <script lang="ts">
-  import { fly } from "svelte/transition";
+  import { enhance } from "$app/forms";
   import type { PageData } from "./$types";
 
   export let data: PageData;
-
-  // new todo form state
-  let title = "";
-  let description = "";
-  let color = "blue";
 </script>
 
 <svelte:head>
@@ -20,19 +15,15 @@
   <h4 class="font-light text-lg italic">by Ben Davis</h4>
 
   {#each data.todos as todo (todo.id)}
-    <div
-      class="flex mt-4 bg-white rounded-lg w-[500px] p-4 shadow-lg flex-col"
-      in:fly={{ x: 50, duration: 5000 }}
-      out:fly={{ x: 50, duration: 1000 }}
-    >
+    <div class="flex mt-4 bg-white rounded-lg w-[500px] p-4 shadow-lg flex-col">
       <h3
         class="flex flex-row items-center gap-x-2 {todo.completed &&
           'line-through'}"
       >
         <span
-          class="w-[12px] h-[12px] rounded-full inline-block {todo.color ===
-            'blue' && 'bg-blue-600'} {todo.color === 'red' &&
-            'bg-red-600'} {todo.color === 'green' && 'bg-green-600'}"
+          class="w-[12px] h-[12px] rounded-full inline-block {todo.completed
+            ? 'bg-green-500'
+            : 'bg-red-500'}"
         />
         <span class="font-bold text-lg">{todo.title}</span>
       </h3>
@@ -43,61 +34,61 @@
         {todo.description}
       </p>
       <div class="flex flex-row justify-end gap-x-4 mt-4">
-        <button
-          class="border-2 p-1 border-blue-600 rounded-lg text-blue-600"
-          on:click={() => {
-            todo.completed = !todo.completed;
-          }}>Complete</button
-        >
-        <button
-          class="border-2 p-1 border-red-600 rounded-lg text-red-600"
-          on:click={() => {
-            data.todos = data.todos.filter((t) => t.id !== todo.id);
+        <form
+          method="POST"
+          action="?/complete"
+          use:enhance={() => {
+            return async ({ result }) => {
+              if (result.status === 200) {
+                // update the todo to be completed
+                const todoIdx = data.todos.findIndex((t) => t.id === todo.id);
+                data.todos[todoIdx].completed = true;
+              }
+            };
           }}
         >
-          Delete</button
+          <input class="hidden" name="id" value={todo.id} />
+          <button
+            class="border-2 p-1 border-blue-600 rounded-lg text-blue-600 disabled:border-gray-600 disabled:text-gray-600"
+            disabled={todo.completed}
+            type="submit">Complete</button
+          >
+        </form>
+        <form
+          method="POST"
+          action="?/delete"
+          use:enhance={() => {
+            return async ({ result }) => {
+              if (result.status === 200) {
+                data.todos = data.todos.filter((t) => t.id !== todo.id);
+              }
+            };
+          }}
         >
+          <input class="hidden" name="id" value={todo.id} />
+          <button
+            class="border-2 p-1 border-red-600 rounded-lg text-red-600"
+            type="submit"
+          >
+            Delete</button
+          >
+        </form>
       </div>
     </div>
   {/each}
-  <form
-    on:submit={() => {
-      data.todos = [
-        ...data.todos,
-        {
-          id: Math.random(),
-          title,
-          completed: false,
-          description,
-          color,
-        },
-      ];
-      title = "";
-      description = "";
-      color = "blue";
-    }}
-  >
+  <form method="POST" action="?/create">
     <input
       type="text"
       class="border-2 border-neutral-800 rounded-lg p-2 mt-4"
       placeholder="Title"
-      bind:value={title}
+      name="title"
     />
     <input
       type="text"
       class="border-2 border-neutral-800 rounded-lg p-2 mt-4"
       placeholder="Description"
-      bind:value={description}
+      name="description"
     />
-    <select
-      class="border-2 border-neutral-800 rounded-lg p-2 mt-4"
-      placeholder="Color"
-      bind:value={color}
-    >
-      <option value="blue">Blue</option>
-      <option value="red">Red</option>
-      <option value="green">Green</option>
-    </select>
     <button
       class="border-2 border-neutral-800 rounded-lg p-2 mt-4"
       type="submit"
@@ -105,4 +96,5 @@
       Add Todo
     </button>
   </form>
+  <a href="/sign-out" class="">Sign Out</a>
 </div>

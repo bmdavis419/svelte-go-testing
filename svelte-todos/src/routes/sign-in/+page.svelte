@@ -41,5 +41,8 @@
         >Submit</button
       >
     </div>
+    <div class="w-full flex justify-center mt-8">
+      <a href="/sign-up">Create Account</a>
+    </div>
   </form>
 </main>

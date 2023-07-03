@@ -1,4 +1,5 @@
 import { redirect } from "@sveltejs/kit";
+import { API_URL } from "$env/static/private";
 
 export const load = async (event) => {
   // get the sessionId from the cookie
@@ -10,7 +11,7 @@ export const load = async (event) => {
   }
 
   // get the user's info from the server
-  const res = await fetch("http://127.0.0.1:8080/users/me", {
+  const res = await event.fetch(`${API_URL}/users/me`, {
     headers: {
       Authorization: `Bearer ${sessionId}`,
     },

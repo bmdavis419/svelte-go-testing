@@ -90,7 +90,7 @@ definitions:
     type: object
 info:
   contact: {}
-  description: This is a basic example API.
+  description: This is a basic CRUD api with authentication, written by @bmdavis419.
   title: Go Svelte Todos API
   version: "1.0"
 paths:

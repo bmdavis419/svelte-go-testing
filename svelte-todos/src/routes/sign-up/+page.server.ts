@@ -1,3 +1,4 @@
+import { API_URL } from "$env/static/private";
 import { redirect } from "@sveltejs/kit";
 
 export const load = async (event) => {
@@ -6,7 +7,7 @@ export const load = async (event) => {
 
   // if there is a sessionId, redirect to the user page
   if (sessionId) {
-    throw redirect(301, "/me");
+    throw redirect(301, "/");
   }
 };
 
@@ -24,7 +25,7 @@ export const actions = {
       last_name,
     });
 
-    const res = await fetch("http://127.0.0.1:8080/users/sign-up", {
+    const res = await fetch(`${API_URL}/users/sign-up`, {
       body,
       method: "POST",
       headers: { "content-type": "application/json" },

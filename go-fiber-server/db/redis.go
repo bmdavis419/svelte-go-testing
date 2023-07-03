@@ -1,15 +1,15 @@
 package db
 
 import (
+	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/config"
 	"github.com/redis/go-redis/v9"
 )
 
-func CreateRedisConnection() *redis.Client {
+func CreateRedisConnection(env config.EnvVars) *redis.Client {
 	rdb := redis.NewClient(&redis.Options{
-		// TODO: switch the port to an env variable
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
+		Addr:     env.REDIS_ADDR,
+		Password: env.REDIS_PASSWORD,
+		DB:       env.REDIS_DB,
 	})
 
 	return rdb

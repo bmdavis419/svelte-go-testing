@@ -9,10 +9,10 @@ type TodoStorage struct {
 }
 
 type Todo_DB struct {
-	Title       string
-	Description string
-	Id          int
-	Completed   bool
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Id          int    `json:"id"`
+	Completed   bool   `json:"completed"`
 }
 
 func NewTodoStorage(conn *sqlx.DB) *TodoStorage {

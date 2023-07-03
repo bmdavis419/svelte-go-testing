@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This is a basic example API.",
+        "description": "This is a basic CRUD api with authentication, written by @bmdavis419.",
         "title": "Go Svelte Todos API",
         "contact": {},
         "version": "1.0"

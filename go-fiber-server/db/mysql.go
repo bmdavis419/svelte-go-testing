@@ -1,15 +1,13 @@
 package db
 
 import (
-	"os"
-
+	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/config"
 	"github.com/jmoiron/sqlx"
 )
 
-func CreateMySqlConnection() *sqlx.DB {
-	conn_str := os.Getenv("DSN")
+func CreateMySqlConnection(env config.EnvVars) *sqlx.DB {
 
-	db := sqlx.MustConnect("mysql", conn_str)
+	db := sqlx.MustConnect("mysql", env.DSN)
 
 	err := db.Ping()
 	if err != nil {

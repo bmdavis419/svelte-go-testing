@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/auth"
+	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/config"
 	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/db"
 	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/handlers"
 	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/storage"
@@ -73,6 +74,8 @@ func newFiberServer(lc fx.Lifecycle, userHandlers *handlers.UserHandler, todoHan
 func main() {
 	fx.New(
 		fx.Provide(
+			// creates: config.EnvVars
+			config.LoadEnv,
 			// creates: *storage.TodoStorage
 			storage.NewTodoStorage,
 			// creates: *handlers.TodoHandler

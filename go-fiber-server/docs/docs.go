@@ -468,7 +468,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "Go Svelte Todos API",
-	Description:      "This is a basic example API.",
+	Description:      "This is a basic CRUD api with authentication, written by @bmdavis419.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
