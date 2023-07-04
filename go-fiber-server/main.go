@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/auth"
 	"github.com/bmdavis419/svelte-go-testing/go-fiber-server/config"
@@ -58,9 +59,12 @@ func newFiberServer(lc fx.Lifecycle, userHandlers *handlers.UserHandler, todoHan
 
 	lc.Append(fx.Hook{
 		OnStart: func(context.Context) error {
-			// TODO: switch the port to an env variable
-			fmt.Println("Starting fiber server on port 8080")
-			go app.Listen(":8080")
+			port := os.Getenv("PORT")
+			if port == "" {
+				port = "8080"
+			}
+			fmt.Printf("Starting fiber server on port %s\n", port)
+			go app.Listen(":" + port)
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {
