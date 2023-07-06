@@ -39,7 +39,9 @@ export const actions = {
       id: parseInt(nUser.insertId),
     });
 
-    event.cookies.set("auth_token", token);
+    event.cookies.set("auth_token", token, {
+      path: "/",
+    });
 
     throw redirect(301, "/me");
   },

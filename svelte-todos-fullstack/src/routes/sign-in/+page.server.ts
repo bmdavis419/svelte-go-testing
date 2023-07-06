@@ -59,7 +59,9 @@ export const actions = {
       email: user[0].email,
       id: user[0].id,
     });
-    event.cookies.set("auth_token", token);
+    event.cookies.set("auth_token", token, {
+      path: "/",
+    });
 
     throw redirect(301, "/me");
   },
