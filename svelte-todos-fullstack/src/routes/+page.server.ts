@@ -4,10 +4,6 @@ import { todosTable, usersTable } from "$lib/server/schema.js";
 import { redirect } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 
-export const config = {
-  runtime: "edge",
-};
-
 export const load = async ({ cookies, fetch }) => {
   // fetch the current user's todos from the server
   const token = cookies.get("auth_token");

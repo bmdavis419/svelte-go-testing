@@ -5,7 +5,9 @@ import adapter from "@sveltejs/adapter-vercel";
 const config = {
   preprocess: vitePreprocess(),
   kit: {
-    adapter: adapter(),
+    adapter: adapter({
+      runtime: "edge",
+    }),
   },
 };
 

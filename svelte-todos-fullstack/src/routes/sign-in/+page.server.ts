@@ -10,7 +10,7 @@ export const load = async (event) => {
   const token = event.cookies.get("auth_token");
 
   // if there is a token, redirect to the user page
-  if (token !== "") {
+  if (token && token !== "") {
     throw redirect(301, "/");
   }
 };
