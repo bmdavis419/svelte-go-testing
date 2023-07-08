@@ -5,6 +5,10 @@ import { eq } from "drizzle-orm";
 import bcrypt from "bcrypt";
 import { createAuthJWT } from "$lib/server/jwt.js";
 
+export const config = {
+  runtime: "nodejs18.x",
+};
+
 export const load = async (event) => {
   // get the sessionId from the cookie
   const token = event.cookies.get("auth_token");

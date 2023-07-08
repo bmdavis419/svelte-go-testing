@@ -1,15 +1,14 @@
 <script>
-  export let form;
 </script>
 
 <main class="w-full h-screen flex items-center justify-center bg-neutral-100">
   <form class="shadow-md rounded-sm w-[400px] p-8" method="POST">
     <h2 class="text-center text-2xl text-neutral-950 mb-8">Sign In</h2>
-    {#if form}
+    <!-- {#if form}
       <h4 class="text-red-600 font-light text-md text-center">
         {form.error}
       </h4>
-    {/if}
+    {/if} -->
     <div class="mb-2">
       <label for="email" class="block font-light text-neutral-800 ml-2"
         >email</label
