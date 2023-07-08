@@ -96,5 +96,5 @@
       Add Todo
     </button>
   </form>
-  <a href="/sign-out" class="">Sign Out</a>
+  <a href="/sign-out" class="" data-sveltekit-preload-data="off">Sign Out</a>
 </div>

@@ -8,6 +8,6 @@
     <p>Here is your full payload:</p>
     <pre>{JSON.stringify(data.props, null, 2)}</pre>
     <a href="/" class="block">View Todos</a>
-    <a href="/sign-out">Log Out</a>
+    <a href="/sign-out" data-sveltekit-preload-data="off">Log Out</a>
   </main>
 {/if}
